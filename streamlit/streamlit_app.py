@@ -82,24 +82,59 @@ c3, c4 = st.columns(2)
 c3.metric("상영 시간", f"{runtime:d} (분)")
 c4.metric("투표 수", f"{vote_count:,}")
 
-
 # 예측 버튼
 if st.button(TEXT["predict_btn"]):
-
     x = np.array([[budget, popularity, runtime, vote_count]])
     x = scaler.transform(x)
 
     pred = model.forward(x)
     rating = float(pred[0][0])
 
-    st.success(f"🎥 {TEXT['success_prefix']}: {rating:.2f} / 10")
+    st.session_state["raw_rating"] = round(rating, 2)
 
-    if rating > 7:
-        st.info(f"{TEXT['high']}")
-    elif rating > 5:
-        st.info(f"{TEXT['mid']}")
+# 예측값이 있을 때만 결과 영역 표시
+if "raw_rating" in st.session_state:
+    raw_rating = st.session_state["raw_rating"]
+
+    edit_mode = st.toggle("예측 평점 수정", value=False)
+
+    if edit_mode:
+        edited_rating = st.number_input(
+            "수정 평점 입력",
+            min_value=0.0,
+            max_value=10.0,
+            value=float(raw_rating),
+            step=0.1,
+            key="edited_rating_input"
+        )
+        final_rating = edited_rating
     else:
-        st.warning(f"{TEXT['low']}")
+        final_rating = raw_rating
+
+    st.success(f"🎥 {TEXT['success_prefix']}: {final_rating:.2f} / 10")
+
+    if final_rating > 7:
+        st.markdown(
+            f"""
+            <div style="
+                background: linear-gradient(135deg, #3b060a 0%, #7f1d1d 35%, #dc2626 100%);
+                color: #fff1f2;
+                padding: 18px 20px;
+                border-radius: 14px;
+                font-weight: 800;
+                font-size: 1.08rem;
+                border-left: 6px solid #ff6b6b;
+                box-shadow: 0 8px 22px rgba(220,38,38,0.35);
+            ">
+                {TEXT['high']}
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+    elif final_rating > 5:
+        st.info(TEXT["mid"])
+    else:
+        st.warning(TEXT["low"])
 
 # ================================
 # Demo Movie Dataset Load
@@ -150,10 +185,10 @@ movies["error"] = abs(movies["vote_average"] - movies["predicted_rating"])
 # 추천 태그
 def opinion(row):
 
-    if row["predicted_rating"] >= 7:
+    if row["vote_average"] >= 7:
         return "🔥 Recommended"
 
-    elif row["predicted_rating"] >= 5:
+    elif row["vote_average"] >= 5:
         return "🙂 Watchable"
 
     else:
@@ -446,7 +481,6 @@ table_df = movies[
         "title",
         "vote_average",
         "predicted_rating",
-        "error",
         "opinion"
     ]
 ].rename(
@@ -454,7 +488,6 @@ table_df = movies[
         "title": "Title",
         "vote_average": "Actual Rating",
         "predicted_rating": "Predicted Rating",
-        "error": "Error",
         "opinion": "Opinion"
     }
 )
