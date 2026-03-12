@@ -1,6 +1,6 @@
 # TeamFirst | MLOps 프로젝트
 
-TMDB 영화 데이터를 기반으로 영화 평점을 예측하고, 모델 학습부터 웹 서비스 시연 및 자동화까지 포함한 MLOps 파이프라인을 구현한 프로젝트입니다.
+#### TMDB 영화 데이터를 기반으로 영화 평점을 예측하고, 모델 학습부터 웹 서비스 시연 및 자동화까지 포함한 MLOps 파이프라인을 구현한 프로젝트입니다.
 ---
 
 ## 1) 프로젝트 개요
@@ -115,13 +115,11 @@ python src/main.py train --model_name movie_predictor
 학습된 모델은 다음 경로에 저장됩니다.
 models/movie_predictor/
 
----
 
 ### Model Inference
 
 python src/main.py inference
 
----
 
 ### Streamlit Demo
 
@@ -131,7 +129,7 @@ streamlit run streamlit/streamlit_app.py
 ---
 
 
-# 5) Demo
+## 5) Demo
 
 Streamlit 기반 웹 인터페이스를 통해
 
