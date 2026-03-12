@@ -90,7 +90,7 @@ repo/
 ```
 
 
-## 3)Setup
+## 3) Setup
 
 ### Python
 
@@ -131,7 +131,7 @@ streamlit run streamlit/streamlit_app.py
 ---
 
 
-# 5. Demo
+# 5) Demo
 
 Streamlit 기반 웹 인터페이스를 통해
 
@@ -140,45 +140,6 @@ Streamlit 기반 웹 인터페이스를 통해
 - 영화 카드 UI 확인
 
 등의 기능을 확인할 수 있습니다.
-
-
----
-
-# 6. System Architecture
-
-본 프로젝트는 머신러닝 모델 개발부터 서비스까지의 전체 흐름을 포함하는  
-간단한 MLOps 구조로 설계되었습니다.
-
-        +-------------------+
-        |     Dataset       |
-        |  (TMDB Movies)    |
-        +---------+---------+
-                  |
-                  v
-        +-------------------+
-        |   Data Processing |
-        |  (Feature Input)  |
-        +---------+---------+
-                  |
-                  v
-        +-------------------+
-        |   Model Training  |
-        |  Movie Predictor  |
-        +---------+---------+
-                  |
-                  v
-        +-------------------+
-        |   Model Storage   |
-        |   (models/*.pkl)  |
-        +---------+---------+
-                  |
-        +---------+--------------+
-        |                        |
-        v                        v
-      +-------------------+ +-------------------+
-      |    FastAPI API    | |  Streamlit Demo   |
-      |   Model Serving   | |   Web Interface   |
-      +-------------------+ +-------------------+
 
 
 ---
